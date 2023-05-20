@@ -38,28 +38,24 @@ public class BookController {
     }
     @GetMapping("/edit/{id}")
     public String editBookForm(@PathVariable("id") Long id, Model model) {
+        // Get the book by ID
         Book book = bookService.getBookById(id);
-        if (book == null) {
-            // Handle case when book is not found, redirect or show an error message
-            return "redirect:/books";
-        }
+
+        // Add the book and categories to the model
         model.addAttribute("book", book);
         model.addAttribute("categories", categoryService.getAllCategories());
+
         return "book/edit";
     }
-    @PostMapping("/edit")
-    public String editBook(@PathVariable("id") Long id, @ModelAttribute("book") Book book) {
-        Book existingBook = bookService.getBookById(id);
-        if (existingBook == null) {
-            // Handle case when book is not found, redirect or show an error message
-            return "redirect:/books";
-        }
-        // Update the existing book with the new data
-        existingBook.setTitle(book.getTitle());
-        existingBook.setAuthor(book.getAuthor());
-        existingBook.setPrice(book.getPrice());
-        existingBook.setCategory(book.getCategory());
-        bookService.updateBook(existingBook);
+
+    // POST request to handle the form submission
+    @PostMapping("/edit/{id}")
+    public String editBook(@ModelAttribute("book") Book book) {
+        Long id = book.getId();
+
+        // Cập nhật thông tin sách
+        bookService.updateBook(book);
+
         return "redirect:/books";
     }
     @GetMapping("/delete/{id}")
