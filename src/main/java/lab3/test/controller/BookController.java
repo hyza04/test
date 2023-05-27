@@ -1,12 +1,15 @@
-package lab3.test;
+package lab3.test.controller;
 
+import jakarta.validation.Valid;
 import lab3.test.entity.Book;
 import lab3.test.entity.Category;
 import lab3.test.services.BookService;
 import lab3.test.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +28,7 @@ public class BookController {
         model.addAttribute("books", books);
         return "book/list";
     }
+
     @GetMapping("/add")
     public String addBookForm(Model model){
         model.addAttribute("book", new Book());
@@ -32,7 +36,11 @@ public class BookController {
         return "book/add";
     }
     @PostMapping("/add")
-    public String addBook(@ModelAttribute("book") Book book){
+    public String addBook(@Valid @ModelAttribute("book") Book book, BindingResult bindingResult, Model model){
+        if (bindingResult.hasErrors()){
+            model.addAttribute("categories", categoryService.getAllCategories());
+            return "book/add";
+        }
         bookService.addBook(book);
         return "redirect:/books";
     }

@@ -1,5 +1,6 @@
 package lab3.test.validator.annotation;
 
+import lab3.test.validator.ValidCategoryIdValidator;
 import lab3.test.validator.ValidUserIdValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
